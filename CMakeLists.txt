@@ -28,7 +28,7 @@ else()
    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+#LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
 
 find_package(OpenCV 4.4)
    if(NOT OpenCV_FOUND)
@@ -40,7 +40,6 @@ MESSAGE(${OpenCV_VERSION})
 
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
-find_package(realsense2)
 
 add_subdirectory(Thirdparty/g2o)
 add_subdirectory(Thirdparty/DBoW2)
@@ -56,6 +55,8 @@ include_directories(
 )
 
 set(LIBRARY_OUTPUT_PATH ${CMAKE_INSTALL_PREFIX}/lib/${PACKAGE_NAME})
+set(DBoW2_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/DBoW2/libDBoW2.so)
+set(g2o_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/g2o/libg2o.so)
 
 if (NOT TARGET ${PROJECT_NAME})
     add_library(${PROJECT_NAME} SHARED
@@ -125,10 +126,8 @@ target_link_libraries(${PROJECT_NAME}
     ${OpenCV_LIBS}
     ${EIGEN3_LIBS}
     ${Pangolin_LIBRARIES}
-    ${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
-    ${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
-    -lboost_serialization
-    -lcrypto
+    ${DBoW2_LIBRARIES}
+    ${g2o_LIBRARIES}
 )
 
 #

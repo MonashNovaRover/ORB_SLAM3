@@ -88,8 +88,7 @@ ${g2o_SOURCE_DIR}/stuff
 ${G2O_EIGEN3_INCLUDE})
 
 # Include the subdirectories
-if (NOT TARGET g2o)
-    ADD_LIBRARY(g2o ${G2O_LIB_TYPE}
+ADD_LIBRARY(g2o SHARED
     #types
     g2o/types/types_sba.h
     g2o/types/types_six_dof_expmap.h
@@ -176,5 +175,4 @@ if (NOT TARGET g2o)
     g2o/stuff/string_tools.cpp
     g2o/stuff/property.cpp       
     g2o/stuff/property.h       
-    )
-endif()
+)
