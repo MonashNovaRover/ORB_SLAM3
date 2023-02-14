@@ -129,6 +129,8 @@ target_link_libraries(${PROJECT_NAME}
     ${Pangolin_LIBRARIES}
     ${DBoW2_LIBRARIES}
     ${g2o_LIBRARIES}
+	-lboost_serialization
+	-lcrypto
 )
 
 #
