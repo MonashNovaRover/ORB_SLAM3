@@ -39,7 +39,7 @@ if(NOT OpenCV_FOUND)
    endif()
 endif()
 
-set(LIBRARY_OUTPUT_PATH ${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME})
+set(LIBRARY_OUTPUT_PATH ${CMAKE_INSTALL_PREFIX}/lib/slam/${PROJECT_NAME})
 
 include_directories(${OpenCV_INCLUDE_DIRS})
 add_library(DBoW2 SHARED ${SRCS_DBOW2} ${SRCS_DUTILS})

@@ -54,10 +54,9 @@ include_directories(
    ${Pangolin_INCLUDE_DIRS}
 )
 
-set(LIBRARY_OUTPUT_PATH ${CMAKE_INSTALL_PREFIX}/lib/${PROJECT_NAME})
-set(ORB_SLAM3_LIBRARIES ${LIBRARY_OUTPUT_PATH}/lib${PROJECT_NAME}.so)
-set(DBoW2_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/DBoW2/libDBoW2.so)
-set(g2o_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/g2o/libg2o.so)
+set(LIBRARY_OUTPUT_PATH ${CMAKE_INSTALL_PREFIX}/lib/slam/${PROJECT_NAME})
+set(DBoW2_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/slam/DBoW2/libDBoW2.so)
+set(g2o_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/slam/g2o/libg2o.so)
 
 if (NOT TARGET ${PROJECT_NAME})
     add_library(${PROJECT_NAME} SHARED
@@ -120,21 +119,18 @@ if (NOT TARGET ${PROJECT_NAME})
         include/Config.h
         include/Settings.h
     )
+
+	target_link_libraries(${PROJECT_NAME}
+		${OpenCV_LIBS}
+		${EIGEN3_LIBS}
+		${Pangolin_LIBRARIES}
+		${DBoW2_LIBRARIES}
+		${g2o_LIBRARIES}
+		-lboost_serialization
+		-lcrypto
+	)
+
 endif()
 
 
-target_link_libraries(${PROJECT_NAME}
-    ${OpenCV_LIBS}
-    ${EIGEN3_LIBS}
-    ${Pangolin_LIBRARIES}
-    ${DBoW2_LIBRARIES}
-    ${g2o_LIBRARIES}
-	-lboost_serialization
-	-lcrypto
-)
 
-#
-#install(LIBRARIES
-#    ${PROJECT_NAME}
-#    DESTINATION lib/${PROJECT_NAME}
-#)
