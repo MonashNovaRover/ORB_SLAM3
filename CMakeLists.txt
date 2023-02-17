@@ -28,7 +28,8 @@ else()
    message(FATAL_ERROR "The compiler ${CMAKE_CXX_COMPILER} has no C++11 support. Please use a different C++ compiler.")
 endif()
 
-#LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+LIST(APPEND CMAKE_MODULE_PATH ${PROJECT_SOURCE_DIR}/cmake_modules)
+message("CMAKE module path: " ${CMAKE_MODULE_PATH})
 
 find_package(OpenCV 4.4)
    if(NOT OpenCV_FOUND)
@@ -40,97 +41,90 @@ MESSAGE(${OpenCV_VERSION})
 
 find_package(Eigen3 3.1.0 REQUIRED)
 find_package(Pangolin REQUIRED)
+find_package(realsense2)
+
 
 add_subdirectory(Thirdparty/g2o)
 add_subdirectory(Thirdparty/DBoW2)
 add_subdirectory(Thirdparty/Sophus)
 
 include_directories(
-   ${PROJECT_SOURCE_DIR}
-   ${PROJECT_SOURCE_DIR}/include
-   ${PROJECT_SOURCE_DIR}/include/CameraModels
-   ${PROJECT_SOURCE_DIR}/Thirdparty/Sophus
-   ${EIGEN3_INCLUDE_DIR}
-   ${Pangolin_INCLUDE_DIRS}
+${PROJECT_SOURCE_DIR}
+${PROJECT_SOURCE_DIR}/include
+${PROJECT_SOURCE_DIR}/include/CameraModels
+${PROJECT_SOURCE_DIR}/Thirdparty/Sophus
+${EIGEN3_INCLUDE_DIR}
+${Pangolin_INCLUDE_DIRS}
 )
 
-set(LIBRARY_OUTPUT_PATH ${CMAKE_INSTALL_PREFIX}/lib/slam/${PROJECT_NAME})
-set(DBoW2_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/slam/DBoW2/libDBoW2.so)
-set(g2o_LIBRARIES ${CMAKE_INSTALL_PREFIX}/lib/slam/g2o/libg2o.so)
+set(CMAKE_LIBRARY_OUTPUT_DIRECTORY ${PROJECT_SOURCE_DIR}/lib)
 
-if (NOT TARGET ${PROJECT_NAME})
-    add_library(${PROJECT_NAME} SHARED
-        src/System.cc
-        src/Tracking.cc
-        src/LocalMapping.cc
-        src/LoopClosing.cc
-        src/ORBextractor.cc
-        src/ORBmatcher.cc
-        src/FrameDrawer.cc
-        src/Converter.cc
-        src/MapPoint.cc
-        src/KeyFrame.cc
-        src/Atlas.cc
-        src/Map.cc
-        src/MapDrawer.cc
-        src/Optimizer.cc
-        src/Frame.cc
-        src/KeyFrameDatabase.cc
-        src/Sim3Solver.cc
-        src/Viewer.cc
-        src/ImuTypes.cc
-        src/G2oTypes.cc
-        src/CameraModels/Pinhole.cpp
-        src/CameraModels/KannalaBrandt8.cpp
-        src/OptimizableTypes.cpp
-        src/MLPnPsolver.cpp
-        src/GeometricTools.cc
-        src/TwoViewReconstruction.cc
-        src/Config.cc
-        src/Settings.cc
-        include/System.h
-        include/Tracking.h
-        include/LocalMapping.h
-        include/LoopClosing.h
-        include/ORBextractor.h
-        include/ORBmatcher.h
-        include/FrameDrawer.h
-        include/Converter.h
-        include/MapPoint.h
-        include/KeyFrame.h
-        include/Atlas.h
-        include/Map.h
-        include/MapDrawer.h
-        include/Optimizer.h
-        include/Frame.h
-        include/KeyFrameDatabase.h
-        include/Sim3Solver.h
-        include/Viewer.h
-        include/ImuTypes.h
-        include/G2oTypes.h
-        include/CameraModels/GeometricCamera.h
-        include/CameraModels/Pinhole.h
-        include/CameraModels/KannalaBrandt8.h
-        include/OptimizableTypes.h
-        include/MLPnPsolver.h
-        include/GeometricTools.h
-        include/TwoViewReconstruction.h
-        include/SerializationUtils.h
-        include/Config.h
-        include/Settings.h
-    )
+add_library(${PROJECT_NAME} SHARED
+src/System.cc
+src/Tracking.cc
+src/LocalMapping.cc
+src/LoopClosing.cc
+src/ORBextractor.cc
+src/ORBmatcher.cc
+src/FrameDrawer.cc
+src/Converter.cc
+src/MapPoint.cc
+src/KeyFrame.cc
+src/Atlas.cc
+src/Map.cc
+src/MapDrawer.cc
+src/Optimizer.cc
+src/Frame.cc
+src/KeyFrameDatabase.cc
+src/Sim3Solver.cc
+src/Viewer.cc
+src/ImuTypes.cc
+src/G2oTypes.cc
+src/CameraModels/Pinhole.cpp
+src/CameraModels/KannalaBrandt8.cpp
+src/OptimizableTypes.cpp
+src/MLPnPsolver.cpp
+src/GeometricTools.cc
+src/TwoViewReconstruction.cc
+src/Config.cc
+src/Settings.cc
+include/System.h
+include/Tracking.h
+include/LocalMapping.h
+include/LoopClosing.h
+include/ORBextractor.h
+include/ORBmatcher.h
+include/FrameDrawer.h
+include/Converter.h
+include/MapPoint.h
+include/KeyFrame.h
+include/Atlas.h
+include/Map.h
+include/MapDrawer.h
+include/Optimizer.h
+include/Frame.h
+include/KeyFrameDatabase.h
+include/Sim3Solver.h
+include/Viewer.h
+include/ImuTypes.h
+include/G2oTypes.h
+include/CameraModels/GeometricCamera.h
+include/CameraModels/Pinhole.h
+include/CameraModels/KannalaBrandt8.h
+include/OptimizableTypes.h
+include/MLPnPsolver.h
+include/GeometricTools.h
+include/TwoViewReconstruction.h
+include/SerializationUtils.h
+include/Config.h
+include/Settings.h)
 
-	target_link_libraries(${PROJECT_NAME}
-		${OpenCV_LIBS}
-		${EIGEN3_LIBS}
-		${Pangolin_LIBRARIES}
-		${DBoW2_LIBRARIES}
-		${g2o_LIBRARIES}
-		-lboost_serialization
-		-lcrypto
-	)
-
-endif()
-
-
-
+target_link_libraries(${PROJECT_NAME}
+${OpenCV_LIBS}
+${EIGEN3_LIBS}
+${Pangolin_LIBRARIES}
+${PROJECT_SOURCE_DIR}/Thirdparty/DBoW2/lib/libDBoW2.so
+${PROJECT_SOURCE_DIR}/Thirdparty/g2o/lib/libg2o.so
+-lboost_serialization
+-lcrypto
+)
